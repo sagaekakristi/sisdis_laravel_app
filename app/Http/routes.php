@@ -24,5 +24,6 @@ Route::get('/', function () {
  */
 Route::group(['prefix'=>'general'], function()
 {
-    Route::get('/note/hello', 'GeneralController@hello');
+    Route::get('/hello', 'GeneralController@hello');
+    Route::get('/uptime', 'GeneralController@uptime');
 });
