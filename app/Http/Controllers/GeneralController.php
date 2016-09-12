@@ -32,6 +32,9 @@ class GeneralController extends Controller
     {
     	exec("uptime", $system_data);
     	$system_string = $system_data[0];
+
+    	return $system_string;
+
     	$uptime = explode(" ", $system_string);
 
     	$up_days = $uptime[4];
