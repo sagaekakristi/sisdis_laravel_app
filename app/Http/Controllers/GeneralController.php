@@ -30,6 +30,16 @@ class GeneralController extends Controller
      */
     public function uptime()
     {
-        return 'not yet implemented';
+    	exec("uptime", $system_data);
+    	$system_string = $system_data[0];
+    	$uptime = explode(" ", $system_string);
+
+    	$up_days = $uptime[4];
+    	$hours = explode(":", $uptime[7]);
+    	$up_hours = $hours[0];
+    	$mins = $hours[1];
+    	$up_mins = str_replace(",", "", $mins);
+
+        return "The server has been up for " . $up_days . " days, " . $up_hours . " hours, and " . $up_mins . " minutes.";
     }
 }
