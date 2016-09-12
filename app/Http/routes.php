@@ -12,5 +12,17 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return array(
+    	'code' => 1000,
+    	'message' => 'Sistem Terdistribusi - Adrianus Saga Ekakristi (saga.ekakristi@gmail.com)',
+    	'data' => null,
+	);
+});
+
+/*
+ * General group
+ */
+Route::group(['prefix'=>'general'], function()
+{
+    Route::get('/note/hello', 'GeneralController@hello');
 });
