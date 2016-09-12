@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Note;
 
+use DB;
+
 class GeneralController extends Controller
 {
     /**
@@ -31,18 +33,13 @@ class GeneralController extends Controller
     public function uptime()
     {
     	exec("uptime", $system_data);
-    	$system_string = $system_data[0];
+    	$uptime_linux = $system_data[0];
 
-    	return $system_string;
+    	$uptime_mysql = DB::select("SHOW GLOBAL STATUS LIKE 'Uptime'")[0]->Value;
 
-    	$uptime = explode(" ", $system_string);
-
-    	$up_days = $uptime[4];
-    	$hours = explode(":", $uptime[7]);
-    	$up_hours = $hours[0];
-    	$mins = $hours[1];
-    	$up_mins = str_replace(",", "", $mins);
-
-        return "The server has been up for " . $up_days . " days, " . $up_hours . " hours, and " . $up_mins . " minutes.";
+    	return array(
+    		'uptime_linux_server' => $uptime_linux,
+    		'uptime_mysql_database' => $uptime_mysql,
+    	);
     }
 }
