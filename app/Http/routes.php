@@ -35,18 +35,13 @@ Route::group(['prefix'=>'general'], function()
 Route::group(['prefix'=>'tugas3'], function()
 {
     Route::get('/klien', 'Tugas3Controller@index');
-    Route::post('/klien/receive', 'Tugas3Controller@receive');
-
-    Route::get('/spesifikasi.wsdl', function() {
-		return File::get(public_path() . '/spesifikasi.wsdl');
-	});
+    Route::any('/server', 'Tugas3Controller@server');
+    Route::any('/client', 'Tugas3Controller@client');
 
     Route::get('/speksaya.wsdl', function() {
         return File::get(public_path() . '/speksaya.wsdl');
     });
-
-	// Route::any('/service','Tugas3Controller@service');
-	Route::any('/server', 'Tugas3Controller@server');
-	Route::any('/client', 'Tugas3Controller@client');
+    
+    // demo purpose only
     Route::get('/demo', 'Tugas3Controller@demo');
 });

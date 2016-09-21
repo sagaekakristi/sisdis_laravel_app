@@ -57,9 +57,22 @@ class Tugas3Controller extends Controller
 
     public function client(Request $request)
     {
-        $client = new SoapClient('http://152.118.33.96/tugas3/speksaya.wsdl');
-        $result = $client->hello($request->input('helloInputMessage'));
-        return $result;
+        $url_wsdl = $request->input('urlWsdl');
+
+        // Add a new service to the wrapper
+        SoapWrapper::add(function ($service) {
+            $service
+                ->name('hello')
+                ->wsdl($url_wsdl);
+        });
+
+        $data = $request->input('helloInputMessage');
+
+        // Using the added service
+        SoapWrapper::service('hello', function ($service) use ($data) {
+            $service->getFunctions();
+            var_dump($service->call('hello', [$data]));
+        });
     }
 
     public function demo(Request $request)
@@ -83,7 +96,7 @@ class Tugas3Controller extends Controller
 }
 
 class HelloWorld {
-    public function hello() {
-        return "Hallo, Thor";
+    public function hello($input_data) {
+        return "Hallo, " . $input_data;
     }
 }

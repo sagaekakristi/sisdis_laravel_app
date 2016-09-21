@@ -5,7 +5,7 @@
 </head>
 <body>
 <?php
-	echo Form::open(array('action'=>'Tugas3Controller@receive', 'method' => 'post'));
+	echo Form::open(array('action'=>'Tugas3Controller@client', 'method' => 'post'));
 	echo Form::hidden('dummy', 'this is just a dummy');
 
 	echo '<div>';
