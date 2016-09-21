@@ -26,4 +26,17 @@ Route::group(['prefix'=>'general'], function()
 {
     Route::get('/hello', 'GeneralController@hello');
     Route::get('/uptime', 'GeneralController@uptime');
+    // Route::get('/demo', 'Tugas3Controller@demo');
+});
+
+/*
+ * Tugas 3 group
+ */
+Route::group(['prefix'=>'tugas3'], function()
+{
+    Route::get('/klien', 'Tugas3Controller@index');
+    Route::post('/klien/receive', 'Tugas3Controller@receive');
+    Route::get('/spesifikasi.wsdl', function() {
+		return File::get(public_path() . '/spesifikasi.wsdl');
+	});
 });
