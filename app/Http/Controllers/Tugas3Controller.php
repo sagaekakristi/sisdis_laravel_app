@@ -97,10 +97,8 @@ class Tugas3Controller extends Controller
             // var_dump($service->getFunctions());
             // var_dump($service->call('hello', [$data]));
             $service->getFunctions();
-            $data['return_string'] = $service->call('hello', [$data['input_string']]);
+            var_dup($service->call('hello', [$data['input_string']]));
         });
-        
-        return $data['return_string'];
     }
 }
 
