@@ -18,7 +18,7 @@ class Tugas3Controller extends Controller
      * Construct
      */
     public function __construct() {
-        parent::__construct();
+        // parent::__construct();
         ini_set('soap.wsdl_cache_enabled', 0);
         ini_set('soap.wsdl_cache_ttl', 0);
         ini_set('default_socket_timeout', 300);
