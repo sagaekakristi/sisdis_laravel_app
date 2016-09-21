@@ -86,7 +86,10 @@ class Tugas3Controller extends Controller
                 // ->wsdl('http://152.118.33.97/tugas3/speksaya.wsdl');
         });
 
-        $data = 'I am Thor';
+        $data = array(
+            'input_string' => 'I am Thor',
+            'return_string' => null,
+        );
         // $data = $request->input('helloInputMessage');
 
         // Using the added service
@@ -94,8 +97,10 @@ class Tugas3Controller extends Controller
             // var_dump($service->getFunctions());
             // var_dump($service->call('hello', [$data]));
             $service->getFunctions();
-            dd($service->call('hello', [$data]));
+            $data['return_string'] = $service->call('hello', [$data['input_string']]);
         });
+        
+        return $data['return_string'];
     }
 }
 
