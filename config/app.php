@@ -147,7 +147,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
 
-        // Artisaninweb\SoapWrapper\ServiceProvider::class,
+        Artisaninweb\SoapWrapper\ServiceProvider::class,
         // 'Artisaninweb\SoapWrapper\ServiceProvider',
 
     ],
@@ -201,7 +201,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
-        // 'SoapWrapper' => Artisaninweb\SoapWrapper\Facades\SoapWrapper::class,
+        'SoapWrapper' => Artisaninweb\SoapWrapper\Facades\SoapWrapper::class,
         // 'SoapWrapper' => 'Artisaninweb\SoapWrapper\Facades\SoapWrapper',
 
     ],
