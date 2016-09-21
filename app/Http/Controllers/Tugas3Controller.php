@@ -43,6 +43,9 @@ class Tugas3Controller extends Controller
         return $string_output;
     }
 
+    /**
+     * Server
+     */
     public function server()
     {
         $server = new SoapServer(
@@ -55,6 +58,9 @@ class Tugas3Controller extends Controller
         $server->handle();
     }
 
+    /**
+     * Client
+     */
     public function client(Request $request)
     {
         $url_wsdl = $request->input('urlWsdl');
@@ -75,6 +81,9 @@ class Tugas3Controller extends Controller
         });
     }
 
+    /**
+     * Demo
+     */
     public function demo(Request $request)
     {
         // Add a new service to the wrapper
@@ -99,7 +108,7 @@ class HelloWorld {
     public function hello($input_data) {
         $time = date("H");
         $prefix = '';
-        
+
         if($time < "12"){
             $prefix = 'Good morning';
         }
