@@ -47,7 +47,7 @@ class Tugas3Controller extends Controller
     {
         $server = new SoapServer(
             // "http://152.118.33.95/tugas3/speksaya.wsdl",
-            "http://localhost:8000/tugas3/speksaya.wsdl",
+            "http://152.118.33.96/tugas3/speksaya.wsdl",
             array('soap_version' => SOAP_1_2)
         );
 
@@ -64,7 +64,7 @@ class Tugas3Controller extends Controller
     {
         // $client = new SoapClient('/tugas3/spesifikasi.wsdl');
         
-        $client = new SoapClient('http://localhost:8000/tugas3/speksaya.wsdl');
+        $client = new SoapClient('http://152.118.33.96/tugas3/speksaya.wsdl');
         $result = $client->hello($request->input('helloInputMessage'));
         return $result;
     }
@@ -82,7 +82,7 @@ class Tugas3Controller extends Controller
                 ->name('hello')
                 // ->wsdl('http://www.herongyang.com/Service/Hello_WSDL_11_SOAP.wsdl');
                 // ->wsdl('http://152.118.33.95/tugas3/speksaya.wsdl');
-                ->wsdl('http://localhost:8000/tugas3/speksaya.wsdl');
+                ->wsdl('http://152.118.33.96/tugas3/speksaya.wsdl');
         });
 
         $data = 'I am Thor';
