@@ -60,7 +60,7 @@ class Tugas3Controller extends Controller
         $url_wsdl = $request->input('urlWsdl');
 
         // Add a new service to the wrapper
-        SoapWrapper::add(function ($service) {
+        SoapWrapper::add(function ($service) use($url_wsdl) {
             $service
                 ->name('hello')
                 ->wsdl($url_wsdl);
