@@ -77,7 +77,7 @@ class Tugas3Controller extends Controller
         // Using the added service
         SoapWrapper::service('hello', function ($service) use ($data) {
             $service->getFunctions();
-            var_dump($service->call('hello', [$data['input_string']]));
+            var_dump($service->call('hello', [$data]));
         });
     }
 }
