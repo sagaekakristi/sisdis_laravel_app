@@ -82,7 +82,8 @@ class Tugas3Controller extends Controller
                 ->name('hello')
                 // ->wsdl('http://www.herongyang.com/Service/Hello_WSDL_11_SOAP.wsdl');
                 // ->wsdl('http://152.118.33.95/tugas3/speksaya.wsdl');
-                ->wsdl('http://152.118.33.96/tugas3/speksaya.wsdl');
+                // ->wsdl('http://152.118.33.96/tugas3/speksaya.wsdl');
+                ->wsdl('http://152.118.33.97/tugas3/speksaya.wsdl');
         });
 
         $data = 'I am Thor';
