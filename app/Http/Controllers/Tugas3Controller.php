@@ -9,8 +9,8 @@ use App\Http\Controllers\Controller;
 
 use View;
 use Artisaninweb\SoapWrapper\Facades\SoapWrapper;
-// use SoapServer;
-// use SoapClient;
+use SoapServer;
+use SoapClient;
 
 class Tugas3Controller extends Controller
 {
@@ -45,45 +45,30 @@ class Tugas3Controller extends Controller
 
     public function server()
     {
-        $server = new \SoapServer(
-            // "http://152.118.33.95/tugas3/speksaya.wsdl",
+        $server = new SoapServer(
             "http://152.118.33.96/tugas3/speksaya.wsdl",
             array('soap_version' => SOAP_1_2)
         );
-
-        // $class = "\\App\\Http\\Controllers\\HelloWorld";
         $class = \App\Http\Controllers\HelloWorld::class;
         $server->setClass($class);
-        // $server->addFunction("hello");
-        // $server->addFunction();
 
         $server->handle();
     }
 
     public function client(Request $request)
     {
-        // $client = new SoapClient('/tugas3/spesifikasi.wsdl');
-        
-        $client = new \SoapClient('http://152.118.33.96/tugas3/speksaya.wsdl');
+        $client = new SoapClient('http://152.118.33.96/tugas3/speksaya.wsdl');
         $result = $client->hello($request->input('helloInputMessage'));
         return $result;
-    }
-
-    public function hello($input_par)
-    {
-        return "Hallo " . $input_par;
     }
 
     public function demo(Request $request)
     {
         // Add a new service to the wrapper
-        \SoapWrapper::add(function ($service) {
+        SoapWrapper::add(function ($service) {
             $service
                 ->name('hello')
-                // ->wsdl('http://www.herongyang.com/Service/Hello_WSDL_11_SOAP.wsdl');
-                // ->wsdl('http://152.118.33.95/tugas3/speksaya.wsdl');
                 ->wsdl('http://152.118.33.96/tugas3/speksaya.wsdl');
-                // ->wsdl('http://152.118.33.97/tugas3/speksaya.wsdl');
         });
 
         $data = 'I am Thor';
@@ -91,11 +76,8 @@ class Tugas3Controller extends Controller
 
         // Using the added service
         SoapWrapper::service('hello', function ($service) use ($data) {
-            // var_dump($service->getFunctions());
-            // var_dump($service->call('hello', [$data]));
             $service->getFunctions();
-            $return_string = $service->call('hello', [$data['input_string']]);
-            return $return_string;
+            var_dump($service->call('hello', [$data['input_string']]));
         });
     }
 }
