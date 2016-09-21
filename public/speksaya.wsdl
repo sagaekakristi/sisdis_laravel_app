@@ -50,7 +50,7 @@
 
   <wsdl:service name="helloService">
     <wsdl:port name="helloPort" binding="hy:helloBinding">
-      <soap:address location="http://152.118.33.96/tugas3/speksaya.wsdl"/>
+      <soap:address location="http://152.118.33.96/tugas3/server"/>
     </wsdl:port>
   </wsdl:service>
 
