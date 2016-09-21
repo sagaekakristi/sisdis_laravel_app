@@ -97,6 +97,19 @@ class Tugas3Controller extends Controller
 
 class HelloWorld {
     public function hello($input_data) {
-        return "Hallo, " . $input_data;
+        $time = date("H");
+        $prefix = '';
+        
+        if($time < "12"){
+            $prefix = 'Good morning';
+        }
+        else if($time >= "12" && $time < "17"){
+            $prefix = 'Good afternoon';
+        }
+        else {
+            $prefix = 'Good evening';
+        }
+
+        return $prefix . ", " . $input_data;
     }
 }
