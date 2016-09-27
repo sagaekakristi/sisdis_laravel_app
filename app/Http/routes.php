@@ -45,3 +45,15 @@ Route::group(['prefix'=>'tugas3'], function()
     // demo purpose only
     Route::get('/demo', 'Tugas3Controller@demo');
 });
+
+/*
+ * Tugas 4 group
+ */
+Route::group(['prefix'=>'tugas4'], function()
+{
+    Route::get('/server/getImage/{filename}', 'Tugas4Controller@get_image_api');
+    Route::get('/server/viewImage/{filename}', 'Tugas4Controller@view_image');
+
+    Route::post('/server/postImage', 'Tugas4Controller@upload_image_api');
+    Route::get('/server/uploadImage', 'Tugas4Controller@upload_image_ui');
+});
