@@ -54,6 +54,7 @@ Route::group(['prefix'=>'tugas4'], function()
     Route::get('/server/getImage/{filename}', 'Tugas4Controller@get_image_api');
     Route::get('/server/viewImage/{filename}', 'Tugas4Controller@view_image');
 
-    Route::post('/server/postImage', 'Tugas4Controller@upload_image_api');
-    Route::get('/server/uploadImage', 'Tugas4Controller@upload_image_ui');
+    Route::post('/klien/postImage', 'Tugas4Controller@upload_image_api');
+    Route::get('/klien/uploadImage', 'Tugas4Controller@upload_image_ui');
+    Route::get('/klien/uploadImage/receiver', 'Tugas4Controller@upload_image_ui_receiver');
 });

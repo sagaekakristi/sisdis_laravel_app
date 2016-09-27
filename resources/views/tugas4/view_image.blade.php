@@ -9,7 +9,7 @@
 		Lokasi Pada Server : {{ $image_path }}
 	</div>
 	<div>
-		Ukuran : {{ $image_size }}
+		Ukuran : {{ $image_size }} Byte
 	</div>
 </body>
 </html>
