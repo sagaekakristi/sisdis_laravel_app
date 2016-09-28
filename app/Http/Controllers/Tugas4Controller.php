@@ -95,7 +95,7 @@ class Tugas4Controller extends Controller
         $image_base64_data = base64_encode($image_file);
 
         $guzzle_client = new GuzzleClient();
-        $url = url('tugas4/server/postImage/' . $image_filename);
+        $url = url('tugas4/server/postImage');
         $response = $guzzle_client->request('POST', $url, [
             // 'form_params' => [],
             // 'headers' => [],
