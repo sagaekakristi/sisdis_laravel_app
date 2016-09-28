@@ -68,20 +68,26 @@ class Tugas4Controller extends Controller
      }
 
     public function upload_image_api(Request $request){
-        $input_image_base64_key = 'image';
-        $input_image_filename_key = 'filename';
+        try {
+            $input_image_base64_key = 'image';
+            $input_image_filename_key = 'filename';
 
-        $input_image_base64 = $request->input($input_image_base64_key);
-        $input_image_filename = $request->input($input_image_filename_key);
+            $input_image_base64 = $request->input($input_image_base64_key);
+            $input_image_filename = $request->input($input_image_filename_key);
 
-        $image_path = public_path() . '/assets/tugas4/img/' . $input_image_filename;
-        $image = base64_decode($input_image_base64);
-        file_put_contents($image_path, $image);
+            $image_path = public_path() . '/assets/tugas4/img/' . $input_image_filename;
+            $image = base64_decode($input_image_base64);
+            file_put_contents($image_path, $image);
 
-        return array(
-            'image' => $input_image_base64,
-            'filename' => $input_image_filename,
-        );
+            return array(
+                'image' => $input_image_base64,
+                'filename' => $input_image_filename,
+            );
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+        
     }
 
     public function upload_image_ui(){
