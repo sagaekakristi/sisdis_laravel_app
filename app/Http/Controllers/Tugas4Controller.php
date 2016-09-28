@@ -74,8 +74,8 @@ class Tugas4Controller extends Controller
         $input_image_base64_key = 'image';
         $input_image_filename_key = 'filename';
 
-        $input_image_base64 = $content[$input_image_base64_key];
-        $input_image_filename = $content[$input_image_filename_key];
+        $input_image_base64 = $content_object[$input_image_base64_key];
+        $input_image_filename = $content_object[$input_image_filename_key];
 
         return array(
             'a' => $input_image_base64,
