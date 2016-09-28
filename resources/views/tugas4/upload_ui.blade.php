@@ -6,16 +6,16 @@
 <body>
 
 <?php
-echo Form::open(array('action'=>'Tugas4Controller@upload_image_ui_receiver', 'method' => 'post'));
+echo Form::open(array('action'=>'Tugas4Controller@upload_image_ui_receiver', 'files'=>true, 'method' => 'post'));
 echo Form::hidden('dummy', 'this is just a dummy');
 
 echo '<div>';
-echo Form::label('file_label', 'File');
+echo Form::label('file', 'File');
 echo ':';
-echo Form::file('file_image', '', array('id'=>'','class'=>''));
+echo Form::file('file', '', array('id'=>'','class'=>''));
 echo '</div>';
 
-echo Form::submit('Unggah', array('class' => 'btn btn-success'));
+echo Form::submit('Unggah');
 echo Form::close();
 ?>
 
