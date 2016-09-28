@@ -106,9 +106,10 @@ class Tugas4Controller extends Controller
     public function upload_image_ui_receiver(Request $request){
         // return $request->input();
         $image_file = $request->file('file');
+        $image_file_content = file_get_contents($image_file);
         // dd($image_file);
         $image_filename = $image_file->getClientOriginalName();
-        $image_base64_data = base64_encode($image_file);
+        $image_base64_data = base64_encode($image_file_content);
 
         $guzzle_client = new GuzzleClient();
         $url = url('tugas4/server/postImage');
