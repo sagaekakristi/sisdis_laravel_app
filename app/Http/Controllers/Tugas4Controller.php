@@ -97,7 +97,7 @@ class Tugas4Controller extends Controller
 
         $guzzle_client = new GuzzleClient();
         $url = url('tugas4/server/postImage');
-        try {
+        // try {
             $response = $guzzle_client->request('POST', $url, [
                 // 'form_params' => [],
                 // 'headers' => [],
@@ -106,10 +106,10 @@ class Tugas4Controller extends Controller
                     'filename' => $image_filename,
                 ),
             ]);
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        // }
+        // catch(Exception $e){
+        //     return $e->getMessage();
+        // }
         
         $body_response = json_decode($response->getBody()->getContents(), true);
         return $body_response;
