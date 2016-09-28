@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use File;
 // use Image;
 use GuzzleHttp\Client as GuzzleClient;
+use Exception;
 
 class Tugas4Controller extends Controller
 {
@@ -96,14 +97,20 @@ class Tugas4Controller extends Controller
 
         $guzzle_client = new GuzzleClient();
         $url = url('tugas4/server/postImage');
-        $response = $guzzle_client->request('POST', $url, [
-            // 'form_params' => [],
-            // 'headers' => [],
-            'json' => array(
-                'image' => $image_base64_data,
-                'filename' => $image_filename,
-            ),
-        ]);
+        try {
+            $response = $guzzle_client->request('POST', $url, [
+                // 'form_params' => [],
+                // 'headers' => [],
+                'json' => array(
+                    'image' => $image_base64_data,
+                    'filename' => $image_filename,
+                ),
+            ]);
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+        
         $body_response = json_decode($response->getBody()->getContents(), true);
         return $body_response;
     }
