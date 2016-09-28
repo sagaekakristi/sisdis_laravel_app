@@ -50,7 +50,7 @@ class Tugas4Controller extends Controller
             // 'body' => [],
         ]);
         $body_response = json_decode($response->getBody()->getContents(), true);
-        return $body_response;
+        // return $body_response;
 
         $image_base64 = $body_response['isi_berkas'];
         $image_path = $body_response['lokasi_berkas'];
