@@ -77,22 +77,16 @@ class Tugas4Controller extends Controller
         $input_image_base64 = $content_object[$input_image_base64_key];
         $input_image_filename = $content_object[$input_image_filename_key];
 
-        // return array(
-        //     'a' => $input_image_base64,
-        //     'b' => $input_image_filename,
-        // );
         try {
             $image_path = public_path() . '/assets/tugas4/img/' . $input_image_filename;
             $image = base64_decode($input_image_base64);
             file_put_contents($image_path, $image);
 
-            return 'haha';
-
-            // return array(
-            //     'status' => 'success',
-            //     'image' => $input_image_base64,
-            //     'filename' => $input_image_filename,
-            // );
+            return array(
+                'status' => 'success',
+                'filename' => $input_image_filename,
+                'url_to_view' => url('tugas4/klien/viewImage/' . $input_image_filename),
+            );
         }
         catch(Exception $e){
             return $e->getMessage();
@@ -104,30 +98,21 @@ class Tugas4Controller extends Controller
     }
 
     public function upload_image_ui_receiver(Request $request){
-        // return $request->input();
         $image_file = $request->file('file');
         $image_file_content = file_get_contents($image_file);
-        // dd($image_file);
         $image_filename = $image_file->getClientOriginalName();
         $image_base64_data = base64_encode($image_file_content);
 
         $guzzle_client = new GuzzleClient();
         $url = url('tugas4/server/postImage');
-        // try {
-            $response = $guzzle_client->request('POST', $url, [
-                // 'form_params' => [],
-                // 'headers' => [],
-                'json' => array(
-                    'image' => $image_base64_data,
-                    'filename' => $image_filename,
-                ),
-            ]);
-        // }
-        // catch(Exception $e){
-        //     return $e->getMessage();
-        // }
-        
-        // $body_response = json_decode($response->getBody()->getContents(), true);
+        $response = $guzzle_client->request('POST', $url, [
+            // 'form_params' => [],
+            // 'headers' => [],
+            'json' => array(
+                'image' => $image_base64_data,
+                'filename' => $image_filename,
+            ),
+        ]);
 
         return $response->getBody()->getContents();
     }
