@@ -87,7 +87,7 @@ class Tugas4Controller extends Controller
         return view('tugas4.upload_ui');
     }
 
-    public function upload_image_ui_receiver(){
-        
+    public function upload_image_ui_receiver(Request $request){
+        return $request->input();
     }
 }

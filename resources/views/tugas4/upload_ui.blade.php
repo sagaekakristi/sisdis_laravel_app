@@ -10,18 +10,12 @@ echo Form::open(array('action'=>'Tugas4Controller@upload_image_ui_receiver', 'me
 echo Form::hidden('dummy', 'this is just a dummy');
 
 echo '<div>';
-echo Form::label('urlWsdl', 'URL WSDL');
+echo Form::label('file_label', 'File');
 echo ':';
-echo Form::text('urlWsdl', null, array('class' => 'form-control'));
+echo Form::file('file_image', '', array('id'=>'','class'=>''));
 echo '</div>';
 
-echo '<div>';
-echo Form::label('helloInputMessage', 'String Dikirim');
-echo ':';
-echo Form::text('helloInputMessage', null, array('class' => 'form-control'));
-echo '</div>';
-
-echo Form::submit('Kirim', array('class' => 'btn btn-success'));
+echo Form::submit('Unggah', array('class' => 'btn btn-success'));
 echo Form::close();
 ?>
 
