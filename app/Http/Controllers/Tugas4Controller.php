@@ -88,6 +88,22 @@ class Tugas4Controller extends Controller
     }
 
     public function upload_image_ui_receiver(Request $request){
-        return $request->input();
+        // return $request->input();
+        $image_file = $request->file('file_image');
+        $image_filename = $image_file->getClientOriginalName();
+        $image_base64_data = base64_encode($image_file);
+
+        $guzzle_client = new GuzzleClient();
+        $url = url('tugas4/server/getImage/' . $filename);
+        $response = $guzzle_client->request('GET', $url, [
+            // 'form_params' => [],
+            // 'headers' => [],
+            'json' => array(
+                'image' => $image_base64_data,
+                'filename' => $image_filename,
+            ),
+        ]);
+        $body_response = json_decode($response->getBody()->getContents(), true);
+        return $body_response;
     }
 }

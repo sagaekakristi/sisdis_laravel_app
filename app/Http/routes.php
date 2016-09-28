@@ -52,11 +52,11 @@ Route::group(['prefix'=>'tugas3'], function()
 Route::group(['prefix'=>'tugas4'], function()
 {
     Route::get('/server/getImage/{filename}', 'Tugas4Controller@get_image_api');
+    Route::post('/server/postImage', 'Tugas4Controller@upload_image_api');
 
     Route::get('/server/viewImage/{filename}', 'Tugas4Controller@view_image_direct'); // unused
     Route::get('/klien/viewImage/{filename}', 'Tugas4Controller@view_image_hit');
 
-    Route::post('/klien/postImage', 'Tugas4Controller@upload_image_api');
     Route::get('/klien/uploadImage', 'Tugas4Controller@upload_image_ui');
     Route::post('/klien/uploadImage/receiver', 'Tugas4Controller@upload_image_ui_receiver');
 });
