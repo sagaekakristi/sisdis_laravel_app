@@ -118,7 +118,8 @@ class Tugas4Controller extends Controller
         //     return $e->getMessage();
         // }
         
-        $body_response = json_decode($response->getBody()->getContents(), true);
-        return $body_response;
+        // $body_response = json_decode($response->getBody()->getContents(), true);
+
+        return $response->getBody()->getContents();
     }
 }
