@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 
 use File;
 // use Image;
+use GuzzleHttp\Client as GuzzleClient;
 
 class Tugas4Controller extends Controller
 {
@@ -40,7 +41,29 @@ class Tugas4Controller extends Controller
     }
 
      public function view_image_hit($filename){
-        
+        $guzzle_client = new GuzzleClient();
+        $url = url('tugas4/server/getImage/' . $filename);
+        // return $url;
+        $response = $guzzle_client->request('GET', $url, [
+            // 'form_params' => [],
+            // 'headers' => [],
+            // 'body' => [],
+        ]);
+        $body_response = json_decode($response->getBody()->getContents(), true);
+        return $body_response;
+
+        $image_base64 = $body_response['isi_berkas'];
+        $image_path = $body_response['lokasi_berkas'];
+        $image_extension = pathinfo($image_path, PATHINFO_EXTENSION);
+        $image_size = $body_response['ukuran_berkas'];
+
+        $image_data = 'data:image/' . $extension . ';base64,' . $image_base64;
+
+        return view('tugas4.view_image')
+            ->with('image_data', $image_data)
+            ->with('image_path', $image_path)
+            ->with('image_size', $image_size)
+            ;
      }
 
     public function upload_image_api(Request $request){

@@ -4,7 +4,7 @@
 	<title>Tugas</title>
 </head>
 <body>
-	<img src="{{ url('/assets/tugas4/img/' . $image_filename )}}">
+	<img src="{{ $image_data )}}">
 	<div>
 		Lokasi Pada Server : {{ $image_path }}
 	</div>
