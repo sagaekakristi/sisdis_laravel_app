@@ -81,16 +81,20 @@ class Tugas4Controller extends Controller
         //     'a' => $input_image_base64,
         //     'b' => $input_image_filename,
         // );
+        try {
+            $image_path = public_path() . '/assets/tugas4/img/' . $input_image_filename;
+            $image = base64_decode($input_image_base64);
+            file_put_contents($image_path, $image);
 
-        $image_path = public_path() . '/assets/tugas4/img/' . $input_image_filename;
-        $image = base64_decode($input_image_base64);
-        file_put_contents($image_path, $image);
-
-        return array(
-            'status' => 'success',
-            'image' => $input_image_base64,
-            'filename' => $input_image_filename,
-        );
+            return array(
+                'status' => 'success',
+                'image' => $input_image_base64,
+                'filename' => $input_image_filename,
+            );
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     public function upload_image_ui(){
