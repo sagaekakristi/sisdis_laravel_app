@@ -68,7 +68,7 @@ class Tugas4Controller extends Controller
      }
 
     public function upload_image_api(Request $request){
-        try {
+        // try {
             $input_image_base64_key = 'image';
             $input_image_filename_key = 'filename';
 
@@ -83,10 +83,10 @@ class Tugas4Controller extends Controller
                 'image' => $input_image_base64,
                 'filename' => $input_image_filename,
             );
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        }
+        // }
+        // catch(Exception $e){
+        //     return $e->getMessage();
+        // }
         
     }
 
