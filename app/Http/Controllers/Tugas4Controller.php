@@ -57,7 +57,7 @@ class Tugas4Controller extends Controller
         $image_extension = pathinfo($image_path, PATHINFO_EXTENSION);
         $image_size = $body_response['ukuran_berkas'];
 
-        $image_data = 'data:image/' . $extension . ';base64,' . $image_base64;
+        $image_data = 'data:image/' . $image_extension . ';base64,' . $image_base64;
 
         return view('tugas4.view_image')
             ->with('image_data', $image_data)
