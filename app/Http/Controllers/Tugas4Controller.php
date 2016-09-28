@@ -27,7 +27,7 @@ class Tugas4Controller extends Controller
         );
     }
 
-    public function view_image($filename){
+    public function view_image_direct($filename){
         $image_path = public_path() . '/assets/tugas4/img/' . $filename;
         $image_file = File::get($image_path);
         $image_size = File::size($image_path);
@@ -38,6 +38,10 @@ class Tugas4Controller extends Controller
             ->with('image_size', $image_size)
             ;
     }
+
+     public function view_image_hit($filename){
+        
+     }
 
     public function upload_image_api(Request $request){
         $input_image_base64_key = 'image';
@@ -57,7 +61,7 @@ class Tugas4Controller extends Controller
     }
 
     public function upload_image_ui(){
-        
+        return view('tugas4.upload_ui');
     }
 
     public function upload_image_ui_receiver(){
