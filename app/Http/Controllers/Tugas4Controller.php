@@ -44,14 +44,12 @@ class Tugas4Controller extends Controller
      public function view_image_hit($filename){
         $guzzle_client = new GuzzleClient();
         $url = url('tugas4/server/getImage/' . $filename);
-        // return $url;
         $response = $guzzle_client->request('GET', $url, [
             // 'form_params' => [],
             // 'headers' => [],
             // 'body' => [],
         ]);
         $body_response = json_decode($response->getBody()->getContents(), true);
-        // return $body_response;
 
         $image_base64 = $body_response['isi_berkas'];
         $image_path = $body_response['lokasi_berkas'];

@@ -60,3 +60,11 @@ Route::group(['prefix'=>'tugas4'], function()
     Route::get('/klien/uploadImage', 'Tugas4Controller@upload_image_ui');
     Route::post('/klien/uploadImage/receiver', 'Tugas4Controller@upload_image_ui_receiver');
 });
+
+/*
+ * Tugas 5 group
+ */
+Route::group(['prefix'=>'tugas5'], function()
+{
+    Route::get('/server', 'Tugas5Controller@index');
+});
