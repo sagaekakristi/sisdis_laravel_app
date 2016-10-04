@@ -14,7 +14,7 @@ class Tugas5Controller extends Controller
     /**
      * Render page.
      */
-    public function index()
+    public function index(Request $request)
     {
         $visitor_counter = VisitorCount::find(1);
         $visitor_counter->counter += 1;
@@ -22,7 +22,7 @@ class Tugas5Controller extends Controller
 
         $ip = '152.118.33.96';
         $owner_name = 'Adrianus Saga Ekakristi';
-        $penumpang_name = 'Christian Halim, Alvin Wijaya';
+        $penumpang_name = $request->ip();
 
         return view('tugas5.index')
             ->with('ip', $ip)
