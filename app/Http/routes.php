@@ -68,3 +68,13 @@ Route::group(['prefix'=>'tugas5'], function()
 {
     Route::get('/server', 'Tugas5Controller@index');
 });
+
+Route::group(['prefix'=>'ewallet'], function()
+{
+    Route::post('/ping', 'EWalletController@ping');
+    Route::post('/register', 'EWalletController@register');
+    Route::post('/getSaldo', 'EWalletController@getSaldo');
+    Route::post('/getTotalSaldo', 'EWalletController@getTotalSaldo');
+    Route::post('/transfer', 'EWalletController@transfer_caller');
+    Route::post('/transferReceiver', 'EWalletController@transfer_receiver');
+});
