@@ -75,6 +75,11 @@ Route::group(['prefix'=>'ewallet'], function()
     Route::post('/register', 'EWalletController@register');
     Route::post('/getSaldo', 'EWalletController@getSaldo');
     Route::post('/getTotalSaldo', 'EWalletController@getTotalSaldo');
-    Route::post('/transfer', 'EWalletController@transfer_caller');
-    Route::post('/transferReceiver', 'EWalletController@transfer_receiver');
+    Route::post('/transfer', 'EWalletController@transfer_receiver');
+    Route::post('/callTransfer', 'EWalletController@transfer_caller');
+
+    Route::group(['prefix'=>'ui'], function()
+    {
+        Route::get('/transfer', 'EWalletController@transfer_ui');
+    });
 });

@@ -10,8 +10,15 @@ use App\Http\Controllers\Controller;
 // models
 use App\Models\EWallet;
 
+// others
+use GuzzleHttp\Client as GuzzleClient;
+use Exception;
+use View;
+
 class EWalletController extends Controller
 {
+    /* Functions */
+
     /**
      * ping.
      */
@@ -64,7 +71,7 @@ class EWalletController extends Controller
         $user_id = $request->input('user_id');
 
         $user = EWallet::where('user_id', '=', $user_id)->first();
-        $nilai_saldo = null;
+        $nilai_saldo = -1;
         // check if user exist
         if($user == null){
             // pass
@@ -84,46 +91,62 @@ class EWalletController extends Controller
     public function getTotalSaldo(Request $request)
     {
         $user_id = $request->input('user_id');
+        $saldo_total = 0;
+        $ips = [
+            'https://saga.sisdis.ui.ac.id/',
+            'https://halim.sisdis.ui.ac.id/',
+            'https://wijaya.sisdis.ui.ac.id/',
+            'https://gylberth.sisdis.ui.ac.id/',
+            'https://joseph.sisdis.ui.ac.id/',
+            'https://raditya.sisdis.ui.ac.id/',
+            'https://wicaksono.sisdis.ui.ac.id/',
+            'https://nindyatama.sisdis.ui.ac.id/',
+        ];
 
-        return array(
+        $guzzle_client = new GuzzleClient();
+        foreach ($ips as $ip){
+            $url = $ip . 'ewallet/getSaldo';
+
+            // catch: connection and parsing exception
+            try {
+                $call_response = $guzzle_client->request('POST', $url, [
+                    // 'form_params' => [],
+                    // 'headers' => [],
+                    'form_params' => array(
+                        'user_id' => $user_id,
+                    ),
+                    'verify' => false,
+                ]);
+                $body_response = json_decode($call_response->getBody()->getContents(), true);
+            }
+            catch(Exception $e){
+                $body_response = [];
+            }
+
+            // catch: dictionary key missing exception
+            try {
+                $saldo = $body_response['nilai_saldo'];
+            }
+            catch(Exception $e){
+                $saldo = 0;
+            }
             
-        );
-    }
-
-    /**
-     * transfer.
-     */
-    public function transfer_caller(Request $request)
-    {
-        $user_id_owner = $request->input('user_id');
-        $nilai = $request->input('nilai');
-
-        $user = EWallet::where('user_id', '=', $user_id_owner)->first();
-        $status_transfer = null;
-        // check if user exist
-        if($user == null){
-            // 
-            $status_transfer = -1;
-        }
-        else { // user exist
-            if($user->saldo < $nilai){
-                // saldo kurang
-                $status_transfer = -1;
+            // handle negative saldo
+            if($saldo < 0){
+                // pass negative value
             }
-            else { // saldo cukup untuk dikurangi
-                // panggil target
-
-                $status_transfer = 0;
+            else {
+                $saldo_total += $saldo;
             }
         }
 
         return array(
-            'status_transfer' => $status_transfer,
+            'nilai_saldo' => $saldo_total,
         );
     }
 
     /**
-     * transfer.
+     * /transfer (sesuai SOAL)
      */
     public function transfer_receiver(Request $request)
     {
@@ -135,7 +158,7 @@ class EWalletController extends Controller
 
         // check if user exist
         if($user == null){
-            // 
+            // user not found
             $status_transfer = -1;
         }
         else { // user exist
@@ -148,5 +171,163 @@ class EWalletController extends Controller
         return array(
             'status_transfer' => $status_transfer,
         );
+    }
+
+    /* UI */
+
+    /**
+     * UI transfer form render
+     */
+    public function transfer_ui(Request $request)
+    {
+        return View::make('ewallet.transfer_form');
+    }
+
+    /**
+     * UI transfer form receiver
+     */
+    public function transfer_caller(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $nilai = $request->input('nilai');
+        $ip_tujuan = $request->input('ip_tujuan');
+        $guzzle_client = new GuzzleClient();
+
+        $user = EWallet::where('user_id', '=', $user_id)->first();
+        $status_transfer = null;
+        // check if user exist
+        if($user == null){
+            // 
+            $status_transfer = -1;
+        }
+        else { // user exist
+            if($user->saldo < $nilai){
+                // saldo kurang
+                return "saldo kurang";
+            }
+            else { // saldo cukup untuk dikurangi
+                // panggil target
+                $url = 'https://' . $ip_tujuan . '/ewallet/transfer';
+
+                // catch: connection and parsing exception
+                try {
+                    $call_response = $guzzle_client->request('POST', $url, [
+                        'form_params' => array(
+                            'user_id' => $user_id,
+                            'nilai' => $nilai,
+                        ),
+                        'verify' => false,
+                    ]);
+                    $body_response = json_decode(
+                        $call_response->getBody()->getContents(), 
+                        true
+                    );
+                }
+                catch (Exception $e){
+                    return array(
+                        'message' => '[1]:connection and parsing error',
+                        'exception' => $e->getMessage(),
+                    );
+                }
+                
+                // catch: dictionary key missing exception
+                try {
+                    $response_status_transfer = $body_response['status_transfer'];
+                }
+                catch (Exception $e){
+                    return array(
+                        'message' => '[2]:dictionary key missing exception',
+                        'exception' => $e->getMessage(),
+                    );
+                }
+                
+                if($response_status_transfer == -1){
+                    // user not found
+                    // call register on target
+                    $register_url = 'https://' . $ip_tujuan . '/ewallet/register';
+
+                    // catch: connection and parsing exception on registering
+                    try {
+                        $register_response = $guzzle_client->request('POST', $register_url, [
+                            'form_params' => array(
+                                'user_id' => $user_id,
+                                'nama' => $user->nama,
+                                'ip_domisili' => $user->ip_domisili,
+                            ),
+                            'verify' => false,
+                        ]);
+                        $register_body = json_decode(
+                            $register_response->getBody()->getContents(), 
+                            true
+                        );
+                    }
+                    catch (Exception $e){
+                        return array(
+                            'message' => '[3]:dictionary key missing exception on registering',
+                            'exception' => $e->getMessage(),
+                        );
+                    }
+
+                    // recall transfer
+                    $transfer_url = 'https://' . $ip_tujuan . '/ewallet/transfer';
+
+                    // catch: connection and parsing exception on retransfer
+                    try {
+                        $transfer_response = $guzzle_client->request('POST', $register_url, [
+                            'form_params' => array(
+                                'user_id' => $user_id,
+                                'nilai' => $nilai,
+                            ),
+                            'verify' => false,
+                        ]);
+                        $transfer_body = json_decode(
+                            $transfer_response->getBody()->getContents(), 
+                            true
+                        );
+                    }
+                    catch (Exception $e){
+                        return array(
+                            'message' => '[4]:dictionary key missing exception on retransfer',
+                            'exception' => $e->getMessage(),
+                        );
+                    }
+                    
+
+                    if($transfer_body['status_transfer'] == -1){
+                        // fail on target server after register
+                        return array(
+                            'message' => '[5]:transfer fail after register',
+                            'register_response' => $register_body,
+                            'transfer_response' => $transfer_body,
+                        );
+                    }
+                    else if ($transfer_body['status_transfer'] == 0){
+                        // success on target server after register
+                        $user->saldo -= $nilai;
+                        $user->save();
+                        return array(
+                            'message' => '[6]:transfer success after register',
+                            'register_response' => $register_body,
+                            'transfer_response' => $transfer_body,
+                        );
+                    }
+                }
+                else if($response_status_transfer == 0){
+                    // success on target server without register
+                    $user->saldo -= $nilai;
+                    $user->save();
+                    return array(
+                        'message' => 'transfer success',
+                    );
+                }
+                else {
+                    // unknown status
+                    return array(
+                        'message' => 'unknown status',
+                        'response' => $body_response,
+                    );
+                }
+            }
+        }
     }
 }
