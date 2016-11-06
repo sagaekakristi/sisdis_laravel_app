@@ -217,14 +217,14 @@ class EWalletController extends Controller
     public function health_check(Request $request)
     {
         $ips = [
-            'https://saga.sisdis.ui.ac.id/',
-            'https://halim.sisdis.ui.ac.id/',
-            'https://wijaya.sisdis.ui.ac.id/',
-            'https://gylberth.sisdis.ui.ac.id/',
-            'https://joseph.sisdis.ui.ac.id/',
-            'https://raditya.sisdis.ui.ac.id/',
-            'https://wicaksono.sisdis.ui.ac.id/',
-            'https://nindyatama.sisdis.ui.ac.id/',
+            '192.168.75.96', // saga
+            '192.168.75.97', // halim
+            '192.168.75.99', // wijaya
+            '192.168.75.104', // gylberth
+            '192.168.75.95', // joseph
+            '192.168.75.76', // raditya
+            '192.168.75.85', // wicaksono
+            '192.168.75.71', // nindyatama
         ];
         $success = [];
         $failure = [];
@@ -273,14 +273,14 @@ class EWalletController extends Controller
     public function quorum(Request $request)
     {
         $ips = [
-            'https://saga.sisdis.ui.ac.id/',
-            'https://halim.sisdis.ui.ac.id/',
-            'https://wijaya.sisdis.ui.ac.id/',
-            'https://gylberth.sisdis.ui.ac.id/',
-            'https://joseph.sisdis.ui.ac.id/',
-            'https://raditya.sisdis.ui.ac.id/',
-            'https://wicaksono.sisdis.ui.ac.id/',
-            'https://nindyatama.sisdis.ui.ac.id/',
+            '192.168.75.96', // saga
+            '192.168.75.97', // halim
+            '192.168.75.99', // wijaya
+            '192.168.75.104', // gylberth
+            '192.168.75.95', // joseph
+            '192.168.75.76', // raditya
+            '192.168.75.85', // wicaksono
+            '192.168.75.71', // nindyatama
         ];
         $success = [];
         $failure = [];
