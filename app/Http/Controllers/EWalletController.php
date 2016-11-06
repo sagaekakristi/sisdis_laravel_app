@@ -77,7 +77,7 @@ class EWalletController extends Controller
             // pass
         }
         else {
-            $nilai_saldo = $user->saldo;
+            $nilai_saldo = intval($user->saldo);
         }
 
         return array(
@@ -92,6 +92,7 @@ class EWalletController extends Controller
     {
         $user_id = $request->input('user_id');
         $saldo_total = 0;
+        $sources = [];
         $ips = [
             'https://saga.sisdis.ui.ac.id/',
             'https://halim.sisdis.ui.ac.id/',
@@ -121,27 +122,64 @@ class EWalletController extends Controller
             }
             catch(Exception $e){
                 $body_response = [];
+                $body_response['nilai_saldo'] = -98;
             }
 
             // catch: dictionary key missing exception
             try {
-                $saldo = $body_response['nilai_saldo'];
+                $saldo = intval($body_response['nilai_saldo']);
             }
             catch(Exception $e){
-                $saldo = 0;
+                $saldo = -97;
             }
             
             // handle negative saldo
-            if($saldo < 0){
+            if($saldo == -1){
                 // pass negative value
+                array_push($sources, array(
+                    'saldo' => $saldo, 
+                    'ip' => $ip,
+                    'message' => 'user not found',
+                ));
+            }
+            else if ($saldo == -98){
+                // pass
+                array_push($sources, array(
+                    'saldo' => $saldo, 
+                    'ip' => $ip,
+                    'message' => 'json key nilai_saldo missing',
+                ));
+            }
+            else if ($saldo == -97){
+                // pass
+                array_push($sources, array(
+                    'saldo' => $saldo, 
+                    'ip' => $ip,
+                    'message' => 'request to server error',
+                ));
+            }
+            else if ($saldo < 0){
+                // pass
+                array_push($sources, array(
+                    'saldo' => $saldo, 
+                    'ip' => $ip,
+                    'message' => 'unknown response',
+                    'response' => $body_response,
+                ));
             }
             else {
+                // add saldo
                 $saldo_total += $saldo;
+                array_push($sources, array(
+                    'saldo' => $saldo, 
+                    'ip' => $ip,
+                ));
             }
         }
 
         return array(
             'nilai_saldo' => $saldo_total,
+            'sources' => $sources,
         );
     }
 
@@ -170,6 +208,124 @@ class EWalletController extends Controller
 
         return array(
             'status_transfer' => $status_transfer,
+        );
+    }
+
+    /**
+     * health check
+     */
+    public function health_check(Request $request)
+    {
+        $ips = [
+            'https://saga.sisdis.ui.ac.id/',
+            'https://halim.sisdis.ui.ac.id/',
+            'https://wijaya.sisdis.ui.ac.id/',
+            'https://gylberth.sisdis.ui.ac.id/',
+            'https://joseph.sisdis.ui.ac.id/',
+            'https://raditya.sisdis.ui.ac.id/',
+            'https://wicaksono.sisdis.ui.ac.id/',
+            'https://nindyatama.sisdis.ui.ac.id/',
+        ];
+        $success = [];
+        $failure = [];
+
+        $guzzle_client = new GuzzleClient();
+        foreach ($ips as $ip){
+            $url = $ip . 'ewallet/ping';
+            // catch: connection and parsing exception
+            try {
+                $call_response = $guzzle_client->request('POST', $url, [
+                    // 'form_params' => [],
+                    // 'headers' => [],
+                    // 'form_params' => [],
+                    'verify' => false,
+                ]);
+                $body_response = json_decode($call_response->getBody()->getContents(), true);
+            }
+            catch(Exception $e){
+                $body_response = [];
+            }
+
+            // catch: dictionary key missing exception
+            try {
+                $pong = $body_response['pong'];
+                if($pong == 1){
+                    array_push($success, $ip);
+                }
+                else {
+                    array_push($failure, $ip);
+                }
+            }
+            catch(Exception $e){
+                array_push($failure, $ip);
+            }
+        }
+
+        return array(
+            'healthy' => $success,
+            'unhealthy' => $failure,
+        );
+    }
+
+    /**
+     * quorum
+     */
+    public function quorum(Request $request)
+    {
+        $ips = [
+            'https://saga.sisdis.ui.ac.id/',
+            'https://halim.sisdis.ui.ac.id/',
+            'https://wijaya.sisdis.ui.ac.id/',
+            'https://gylberth.sisdis.ui.ac.id/',
+            'https://joseph.sisdis.ui.ac.id/',
+            'https://raditya.sisdis.ui.ac.id/',
+            'https://wicaksono.sisdis.ui.ac.id/',
+            'https://nindyatama.sisdis.ui.ac.id/',
+        ];
+        $success = [];
+        $failure = [];
+
+        $guzzle_client = new GuzzleClient();
+        foreach ($ips as $ip){
+            $url = $ip . 'ewallet/ping';
+            // catch: connection and parsing exception
+            try {
+                $call_response = $guzzle_client->request('POST', $url, [
+                    // 'form_params' => [],
+                    // 'headers' => [],
+                    // 'form_params' => [],
+                    'verify' => false,
+                ]);
+                $body_response = json_decode($call_response->getBody()->getContents(), true);
+            }
+            catch(Exception $e){
+                $body_response = [];
+            }
+
+            // catch: dictionary key missing exception
+            try {
+                $pong = $body_response['pong'];
+                if($pong == 1){
+                    array_push($success, $ip);
+                }
+                else {
+                    array_push($failure, $ip);
+                }
+            }
+            catch(Exception $e){
+                array_push($failure, $ip);
+            }
+        }
+
+        $total_count = sizeof($ips);
+        $success_count = sizeof($success);
+        $failure_count = sizeof($failure);
+
+        return array(
+            'quorum' => $success_count,
+            'percentage' => $success_count / (float) $total_count * 100,
+            'success' => $success,
+            'failure' => $failure,
         );
     }
 
@@ -206,15 +362,15 @@ class EWalletController extends Controller
                 return "saldo kurang";
             }
             else { // saldo cukup untuk dikurangi
-                // panggil target
-                $url = 'https://' . $ip_tujuan . '/ewallet/transfer';
+                // panggil target: cek keberadaaan user_id via getSaldo
+                $url = 'https://' . $ip_tujuan . '/ewallet/getSaldo';
 
                 // catch: connection and parsing exception
                 try {
                     $call_response = $guzzle_client->request('POST', $url, [
                         'form_params' => array(
                             'user_id' => $user_id,
-                            'nilai' => $nilai,
+                            // 'nilai' => $nilai,
                         ),
                         'verify' => false,
                     ]);
@@ -232,7 +388,7 @@ class EWalletController extends Controller
                 
                 // catch: dictionary key missing exception
                 try {
-                    $response_status_transfer = $body_response['status_transfer'];
+                    $response_nilai_saldo = $body_response['nilai_saldo'];
                 }
                 catch (Exception $e){
                     return array(
@@ -241,7 +397,7 @@ class EWalletController extends Controller
                     );
                 }
                 
-                if($response_status_transfer == -1){
+                if($response_nilai_saldo == -1){
                     // user not found
                     // call register on target
                     $register_url = 'https://' . $ip_tujuan . '/ewallet/register';
@@ -312,19 +468,19 @@ class EWalletController extends Controller
                         );
                     }
                 }
-                else if($response_status_transfer == 0){
+                else if($response_nilai_saldo < 0){
+                    // unknown status
+                    return array(
+                        'message' => 'unknown status',
+                        'response' => $body_response,
+                    );
+                }
+                else {
                     // success on target server without register
                     $user->saldo -= $nilai;
                     $user->save();
                     return array(
                         'message' => 'transfer success',
-                    );
-                }
-                else {
-                    // unknown status
-                    return array(
-                        'message' => 'unknown status',
-                        'response' => $body_response,
                     );
                 }
             }

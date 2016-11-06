@@ -82,4 +82,7 @@ Route::group(['prefix'=>'ewallet'], function()
     {
         Route::get('/transfer', 'EWalletController@transfer_ui');
     });
+
+    Route::post('/healthCheck', 'EWalletController@health_check');
+    Route::post('/quorum', 'EWalletController@quorum');
 });
