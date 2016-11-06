@@ -231,7 +231,7 @@ class EWalletController extends Controller
 
         $guzzle_client = new GuzzleClient();
         foreach ($ips as $ip){
-            $url = $ip . 'ewallet/ping';
+            $url = $ip . '/ewallet/ping';
             // catch: connection and parsing exception
             try {
                 $call_response = $guzzle_client->request('POST', $url, [
@@ -287,7 +287,7 @@ class EWalletController extends Controller
 
         $guzzle_client = new GuzzleClient();
         foreach ($ips as $ip){
-            $url = $ip . 'ewallet/ping';
+            $url = $ip . '/ewallet/ping';
             // catch: connection and parsing exception
             try {
                 $call_response = $guzzle_client->request('POST', $url, [
