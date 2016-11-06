@@ -310,10 +310,14 @@ class EWalletController extends Controller
                 }
                 else {
                     array_push($failure, $ip);
+                    array_push($failure, $url);
+                    array_push($failure, $body_response);
                 }
             }
             catch(Exception $e){
                 array_push($failure, $ip);
+                array_push($failure, $url);
+                array_push($failure, $body_response);
             }
         }
 
