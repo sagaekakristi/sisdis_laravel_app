@@ -10,6 +10,9 @@ use App\Http\Controllers\Controller;
 // models
 use App\Models\EWallet;
 
+// helpers
+use App\Helpers\EWalletHelper;
+
 // others
 use GuzzleHttp\Client as GuzzleClient;
 use Exception;
@@ -34,6 +37,17 @@ class EWalletController extends Controller
      */
     public function register(Request $request)
     {
+        // cek quorum
+        $quorum_data = EWalletHelper::quorum_check();
+        $quorum_count = $quorum_data['quorum'];
+        if($quorum_count < 5){
+            return array(
+                'message' => 'quorum tidak terpenuhi',
+                'quorum_status' => -1,
+                'quorum_data' => $quorum_data,
+            );
+        }
+
         $user_id = $request->input('user_id');
         $nama = $request->input('nama');
         $ip_domisili = $request->input('ip_domisili');
@@ -68,6 +82,17 @@ class EWalletController extends Controller
      */
     public function getSaldo(Request $request)
     {
+        // cek quorum
+        $quorum_data = EWalletHelper::quorum_check();
+        $quorum_count = $quorum_data['quorum'];
+        if($quorum_count < 5){
+            return array(
+                'message' => 'quorum tidak terpenuhi',
+                'quorum_status' => -1,
+                'quorum_data' => $quorum_data,
+            );
+        }
+
         $user_id = $request->input('user_id');
 
         $user = EWallet::where('user_id', '=', $user_id)->first();
@@ -90,6 +115,17 @@ class EWalletController extends Controller
      */
     public function getTotalSaldo(Request $request)
     {
+        // cek quorum
+        $quorum_data = EWalletHelper::quorum_check();
+        $quorum_count = $quorum_data['quorum'];
+        if($quorum_count < 8){
+            return array(
+                'message' => 'quorum tidak terpenuhi',
+                'quorum_status' => -1,
+                'quorum_data' => $quorum_data,
+            );
+        }
+
         $user_id = $request->input('user_id');
         $saldo_total = 0;
         $sources = [];
@@ -188,6 +224,17 @@ class EWalletController extends Controller
      */
     public function transfer_receiver(Request $request)
     {
+        // cek quorum
+        $quorum_data = EWalletHelper::quorum_check();
+        $quorum_count = $quorum_data['quorum'];
+        if($quorum_count < 5){
+            return array(
+                'message' => 'quorum tidak terpenuhi',
+                'quorum_status' => -1,
+                'quorum_data' => $quorum_data,
+            );
+        }
+
         $user_id_destination = $request->input('user_id');
         $nilai = $request->input('nilai');
 
