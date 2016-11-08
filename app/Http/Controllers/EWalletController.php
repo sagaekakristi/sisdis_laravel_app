@@ -547,14 +547,13 @@ class EWalletController extends Controller
     }
 
     /**
-     * UI total saldo form render
+     * UI total saldo caller
      */
     public function total_saldo_caller(Request $request)
     {
         $user_id = $request->input('user_id');
 
         $guzzle_client = new GuzzleClient();
-        // panggil target: cek keberadaaan user_id via getSaldo
         $url = 'https://' . 'saga.sisdis.ui.ac.id' . '/ewallet/getTotalSaldo';
 
         // catch: connection and parsing exception
@@ -572,23 +571,147 @@ class EWalletController extends Controller
         }
         catch (Exception $e){
             return array(
-                'message' => '[1]:connection and parsing error',
+                'message' => '[1]:connection and parsing error on UI',
                 'exception' => $e->getMessage(),
             );
         }
-        
-        // catch: dictionary key missing exception
-        // try {
-        //     $response_nilai_saldo = $body_response['nilai_saldo'];
-        // }
-        // catch (Exception $e){
-        //     return array(
-        //         'message' => '[2]:dictionary key missing exception',
-        //         'exception' => $e->getMessage(),
-        //         'response' => $body_response,
-        //     );
-        // }
 
         return $body_response;
+    }
+
+    /**
+     * UI ping render
+     */
+    public function ping_ui(Request $request)
+    {
+        return View::make('ewallet.ping_form');
+    }
+
+    /**
+     * UI ping caller
+     */
+    public function ping_caller(Request $request){
+        $guzzle_client = new GuzzleClient();
+        $url = 'https://' . 'saga.sisdis.ui.ac.id' . '/ewallet/ping';
+
+        // catch: connection and parsing exception
+        try {
+            $call_response = $guzzle_client->request('POST', $url, [
+                'form_params' => array(),
+                'verify' => false,
+            ]);
+            $body_response = json_decode(
+                $call_response->getBody()->getContents(), 
+                true
+            );
+        }
+        catch (Exception $e){
+            return array(
+                'message' => '[1]:connection and parsing error on UI',
+                'exception' => $e->getMessage(),
+            );
+        }
+
+        return $body_response;
+    }
+
+    /**
+     * UI register render
+     */
+    public function register_ui(Request $request)
+    {
+        return View::make('ewallet.register_form');
+    }
+
+    /**
+     * UI register caller
+     */
+    public function register_caller(Request $request){
+        $user_id = $request->input('user_id');
+        $nama = $request->input('nama');
+        $ip_domisili = $request->input('ip_domisili');
+
+        $guzzle_client = new GuzzleClient();
+        $url = 'https://' . 'saga.sisdis.ui.ac.id' . '/ewallet/register';
+
+        // catch: connection and parsing exception
+        try {
+            $call_response = $guzzle_client->request('POST', $url, [
+                'form_params' => array(
+                    'user_id' => $user_id,
+                    'nama' => $nama,
+                    'ip_domisili' => $ip_domisili,
+                ),
+                'verify' => false,
+            ]);
+            $body_response = json_decode(
+                $call_response->getBody()->getContents(), 
+                true
+            );
+        }
+        catch (Exception $e){
+            return array(
+                'message' => '[1]:connection and parsing error on UI',
+                'exception' => $e->getMessage(),
+            );
+        }
+
+        return $body_response;
+    }
+
+    /**
+     * UI register render
+     */
+    public function get_saldo_ui(Request $request)
+    {
+        return View::make('ewallet.get_saldo_form');
+    }
+
+    /**
+     * UI get saldo caller
+     */
+    public function get_saldo_caller(Request $request){
+        $user_id = $request->input('user_id');
+
+        $guzzle_client = new GuzzleClient();
+        $url = 'https://' . 'saga.sisdis.ui.ac.id' . '/ewallet/getSaldo';
+
+        // catch: connection and parsing exception
+        try {
+            $call_response = $guzzle_client->request('POST', $url, [
+                'form_params' => array(
+                    'user_id' => $user_id,
+                ),
+                'verify' => false,
+            ]);
+            $body_response = json_decode(
+                $call_response->getBody()->getContents(), 
+                true
+            );
+        }
+        catch (Exception $e){
+            return array(
+                'message' => '[1]:connection and parsing error on UI',
+                'exception' => $e->getMessage(),
+            );
+        }
+
+        return $body_response;
+    }
+
+    /**
+     * UI health check render
+     */
+    public function health_check_ui(Request $request)
+    {
+        return View::make('ewallet.health_check_form');
+    }
+
+    /**
+     * UI quorum render
+     */
+    public function quorum_ui(Request $request)
+    {
+        return View::make('ewallet.quorum_form');
     }
 }

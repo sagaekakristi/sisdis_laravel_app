@@ -81,12 +81,21 @@ Route::group(['prefix'=>'ewallet'], function()
     {
         Route::post('/transfer', 'EWalletController@transfer_caller');
         Route::post('/getTotalSaldo', 'EWalletController@total_saldo_caller');
+        Route::post('/ping', 'EWalletController@ping_caller');
+        Route::post('/register', 'EWalletController@register_caller');
+        Route::post('/getSaldo', 'EWalletController@get_saldo_caller');
     });
 
     Route::group(['prefix'=>'ui'], function()
     {
         Route::get('/transfer', 'EWalletController@transfer_ui');
         Route::get('/getTotalSaldo', 'EWalletController@total_saldo_ui');
+        Route::get('/ping', 'EWalletController@ping_ui');
+        Route::get('/register', 'EWalletController@register_ui');
+        Route::get('/getSaldo', 'EWalletController@get_saldo_ui');
+
+        Route::get('/healthCheck', 'EWalletController@health_check_ui');
+        Route::get('/quorum', 'EWalletController@quorum_ui');
     });
 
     Route::post('/healthCheck', 'EWalletController@health_check');
