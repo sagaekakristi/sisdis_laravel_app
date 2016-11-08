@@ -537,4 +537,58 @@ class EWalletController extends Controller
             }
         }
     }
+
+    /**
+     * UI total saldo form render
+     */
+    public function total_saldo_ui(Request $request)
+    {
+        return View::make('ewallet.total_saldo_form');
+    }
+
+    /**
+     * UI total saldo form render
+     */
+    public function total_saldo_caller(Request $request)
+    {
+        $user_id = $request->input('user_id');
+
+        $guzzle_client = new GuzzleClient();
+        // panggil target: cek keberadaaan user_id via getSaldo
+        $url = 'https://' . 'saga.sisdis.ui.ac.id' . '/ewallet/getTotalSaldo';
+
+        // catch: connection and parsing exception
+        try {
+            $call_response = $guzzle_client->request('POST', $url, [
+                'form_params' => array(
+                    'user_id' => $user_id,
+                ),
+                'verify' => false,
+            ]);
+            $body_response = json_decode(
+                $call_response->getBody()->getContents(), 
+                true
+            );
+        }
+        catch (Exception $e){
+            return array(
+                'message' => '[1]:connection and parsing error',
+                'exception' => $e->getMessage(),
+            );
+        }
+        
+        // catch: dictionary key missing exception
+        // try {
+        //     $response_nilai_saldo = $body_response['nilai_saldo'];
+        // }
+        // catch (Exception $e){
+        //     return array(
+        //         'message' => '[2]:dictionary key missing exception',
+        //         'exception' => $e->getMessage(),
+        //         'response' => $body_response,
+        //     );
+        // }
+
+        return $body_response;
+    }
 }
