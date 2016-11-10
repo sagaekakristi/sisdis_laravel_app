@@ -68,4 +68,30 @@ class EWalletHelper {
             'failure' => $failure,
         );
 	}
+
+    public static function front_ip_to_domain($params)
+    {
+        $ip_domisili = $params['ip_domisili'];
+        $domain_domisili = null;
+        $domain_dict = array(
+            '152.118.33.96' => 'saga.sisdis.ui.ac.id',
+            '152.118.33.97' => 'halim.sisdis.ui.ac.id',
+            '152.118.33.99' => 'wijaya.sisdis.ui.ac.id',
+            '152.118.33.104' => 'gylberth.sisdis.ui.ac.id',
+            '152.118.33.95' => 'joseph.sisdis.ui.ac.id',
+            '152.118.33.76' => 'raditya.sisdis.ui.ac.id',
+            '152.118.33.85' => 'wicaksono.sisdis.ui.ac.id',
+            '152.118.33.71' => 'nindyatama.sisdis.ui.ac.id',
+        );
+
+        try {
+            $domain_domisili = $domain_dict['ip_domisili'];
+        }
+        catch(Exception $exception){
+            // front ip key not found -> back to front ip
+            $domain_domisili = $ip_domisili;
+        }
+
+        return $domain_domisili;
+    }
 }

@@ -20,6 +20,13 @@ use View;
 
 class EWalletController extends Controller
 {
+    /**
+     * Construct
+     */
+    public function __construct() {
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+    }
+
     /* Functions */
 
     /**
@@ -140,9 +147,20 @@ class EWalletController extends Controller
             'https://nindyatama.sisdis.ui.ac.id/',
         ];
 
-        $guzzle_client = new GuzzleClient();
-        foreach ($ips as $ip){
-            $url = $ip . 'ewallet/getSaldo';
+        // check ip domisili
+        $user = EWallet::where('user_id', '=', $user_id)->first();
+        if($user == null){
+            return array(
+                'message' => 'user_id not found: ' . $user_id,
+            );
+        }
+        
+        $ip_domisili = $user->ip_domisili;
+        if($ip_domisili != '152.118.33.96') {
+            // ip domisili bukan server ini
+            // call getTotalSaldo milik ip domisili aslinya
+            $guzzle_client = new GuzzleClient();
+            $url = 'https://' . EWalletHelper::front_ip_to_domain($ip_domisili) . 'ewallet/getTotalSaldo';
 
             // catch: connection and parsing exception
             try {
@@ -157,66 +175,107 @@ class EWalletController extends Controller
                 $body_response = json_decode($call_response->getBody()->getContents(), true);
             }
             catch(Exception $e){
-                $body_response = [];
-                $body_response['nilai_saldo'] = -98;
+                return array(
+                    'message' => 'connection or parsing exception when calling: ' . $url,
+                );
             }
 
             // catch: dictionary key missing exception
             try {
-                $saldo = intval($body_response['nilai_saldo']);
+                $nilai_saldo = intval($body_response['nilai_saldo']);
             }
             catch(Exception $e){
-                $saldo = -97;
+                return array(
+                    'message' => 'dictionary key missing from response of: ' . $url,
+                    'body_response' => $body_response,
+                );
             }
-            
-            // handle negative saldo
-            if($saldo == -1){
-                // pass negative value
-                array_push($sources, array(
-                    'saldo' => $saldo, 
-                    'ip' => $ip,
-                    'message' => 'user not found',
-                ));
-            }
-            else if ($saldo == -98){
-                // pass
-                array_push($sources, array(
-                    'saldo' => $saldo, 
-                    'ip' => $ip,
-                    'message' => 'json key nilai_saldo missing',
-                ));
-            }
-            else if ($saldo == -97){
-                // pass
-                array_push($sources, array(
-                    'saldo' => $saldo, 
-                    'ip' => $ip,
-                    'message' => 'request to server error',
-                ));
-            }
-            else if ($saldo < 0){
-                // pass
-                array_push($sources, array(
-                    'saldo' => $saldo, 
-                    'ip' => $ip,
-                    'message' => 'unknown response',
-                    'response' => $body_response,
-                ));
-            }
-            else {
-                // add saldo
-                $saldo_total += $saldo;
-                array_push($sources, array(
-                    'saldo' => $saldo, 
-                    'ip' => $ip,
-                ));
-            }
-        }
 
-        return array(
-            'nilai_saldo' => $saldo_total,
-            'sources' => $sources,
-        );
+            return array(
+                'nilai_saldo' => $nilai_saldo,
+            );
+        }
+        else {
+            // ip domisili berada pada server ini
+            // jalankan seperti biasa
+            $guzzle_client = new GuzzleClient();
+            foreach ($ips as $ip){
+                $url = $ip . 'ewallet/getSaldo';
+
+                // catch: connection and parsing exception
+                try {
+                    $call_response = $guzzle_client->request('POST', $url, [
+                        // 'form_params' => [],
+                        // 'headers' => [],
+                        'form_params' => array(
+                            'user_id' => $user_id,
+                        ),
+                        'verify' => false,
+                    ]);
+                    $body_response = json_decode($call_response->getBody()->getContents(), true);
+                }
+                catch(Exception $e){
+                    $body_response = [];
+                    $body_response['nilai_saldo'] = -98;
+                }
+
+                // catch: dictionary key missing exception
+                try {
+                    $saldo = intval($body_response['nilai_saldo']);
+                }
+                catch(Exception $e){
+                    $saldo = -97;
+                }
+                
+                // handle negative saldo
+                if($saldo == -1){
+                    // pass negative value
+                    array_push($sources, array(
+                        'saldo' => $saldo, 
+                        'ip' => $ip,
+                        'message' => 'user not found',
+                    ));
+                }
+                else if ($saldo == -98){
+                    // pass
+                    array_push($sources, array(
+                        'saldo' => $saldo, 
+                        'ip' => $ip,
+                        'message' => 'json key nilai_saldo missing',
+                    ));
+                }
+                else if ($saldo == -97){
+                    // pass
+                    array_push($sources, array(
+                        'saldo' => $saldo, 
+                        'ip' => $ip,
+                        'message' => 'request to server error',
+                    ));
+                }
+                else if ($saldo < 0){
+                    // pass
+                    array_push($sources, array(
+                        'saldo' => $saldo, 
+                        'ip' => $ip,
+                        'message' => 'unknown response',
+                        'response' => $body_response,
+                    ));
+                }
+                else {
+                    // add saldo
+                    $saldo_total += $saldo;
+                    array_push($sources, array(
+                        'saldo' => $saldo, 
+                        'ip' => $ip,
+                    ));
+                }
+            }
+
+            return array(
+                'nilai_saldo' => $saldo_total,
+                'sources' => $sources,
+            );
+        }
     }
 
     /**
