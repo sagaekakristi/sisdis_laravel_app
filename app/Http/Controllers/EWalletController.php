@@ -137,14 +137,14 @@ class EWalletController extends Controller
         $saldo_total = 0;
         $sources = [];
         $ips = [
-            'https://saga.sisdis.ui.ac.id/',
-            'https://halim.sisdis.ui.ac.id/',
-            'https://wijaya.sisdis.ui.ac.id/',
-            'https://gylberth.sisdis.ui.ac.id/',
-            'https://joseph.sisdis.ui.ac.id/',
-            'https://raditya.sisdis.ui.ac.id/',
-            'https://wicaksono.sisdis.ui.ac.id/',
-            'https://nindyatama.sisdis.ui.ac.id/',
+            'saga.sisdis.ui.ac.id/',
+            'halim.sisdis.ui.ac.id/',
+            'wijaya.sisdis.ui.ac.id/',
+            'gylberth.sisdis.ui.ac.id/',
+            'joseph.sisdis.ui.ac.id/',
+            'raditya.sisdis.ui.ac.id/',
+            'wicaksono.sisdis.ui.ac.id/',
+            'nindyatama.sisdis.ui.ac.id/',
         ];
 
         // check ip domisili
@@ -167,7 +167,7 @@ class EWalletController extends Controller
                 $call_response = $guzzle_client->request('POST', $url, [
                     // 'form_params' => [],
                     // 'headers' => [],
-                    'form_params' => array(
+                    'json' => array(
                         'user_id' => $user_id,
                     ),
                     'verify' => false,
@@ -200,7 +200,7 @@ class EWalletController extends Controller
             // jalankan seperti biasa
             $guzzle_client = new GuzzleClient();
             foreach ($ips as $ip){
-                $url = $ip . 'ewallet/getSaldo';
+                $url = 'https://' . $ip . 'ewallet/getSaldo';
 
                 // catch: connection and parsing exception
                 try {
