@@ -215,8 +215,14 @@ class EWalletController extends Controller
                     $body_response = json_decode($call_response->getBody()->getContents(), true);
                 }
                 catch(Exception $e){
-                    $body_response = [];
-                    $body_response['nilai_saldo'] = -98;
+                    // $body_response = [];
+                    // $body_response['nilai_saldo'] = -98;
+                    array_push($sources, array(
+                        'ip' => $ip,
+                        'message' => 'connection and parsing exception',
+                        'exception' => $e->getMessage(),
+                    ));
+                    continue;
                 }
 
                 // catch: dictionary key missing exception
@@ -224,7 +230,14 @@ class EWalletController extends Controller
                     $saldo = intval($body_response['nilai_saldo']);
                 }
                 catch(Exception $e){
-                    $saldo = -97;
+                    // $saldo = -97;
+                    array_push($sources, array(
+                        'ip' => $ip,
+                        'message' => 'dictionary key missing',
+                        'exception' => $e->getMessage(),
+                        'response' => $body_response,
+                    ));
+                    continue;
                 }
                 
                 // handle negative saldo
@@ -236,22 +249,22 @@ class EWalletController extends Controller
                         'message' => 'user not found',
                     ));
                 }
-                else if ($saldo == -98){
-                    // pass
-                    array_push($sources, array(
-                        'saldo' => $saldo, 
-                        'ip' => $ip,
-                        'message' => 'json key nilai_saldo missing',
-                    ));
-                }
-                else if ($saldo == -97){
-                    // pass
-                    array_push($sources, array(
-                        'saldo' => $saldo, 
-                        'ip' => $ip,
-                        'message' => 'request to server error',
-                    ));
-                }
+                // else if ($saldo == -98){
+                //     // pass
+                //     array_push($sources, array(
+                //         'saldo' => $saldo, 
+                //         'ip' => $ip,
+                //         'message' => 'json key nilai_saldo missing',
+                //     ));
+                // }
+                // else if ($saldo == -97){
+                //     // pass
+                //     array_push($sources, array(
+                //         'saldo' => $saldo, 
+                //         'ip' => $ip,
+                //         'message' => 'request to server error',
+                //     ));
+                // }
                 else if ($saldo < 0){
                     // pass
                     array_push($sources, array(
