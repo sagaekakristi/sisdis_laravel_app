@@ -167,7 +167,7 @@ class EWalletController extends Controller
                 $call_response = $guzzle_client->request('POST', $url, [
                     // 'form_params' => [],
                     // 'headers' => [],
-                    'json' => array(
+                    'form_params' => array(
                         'user_id' => $user_id,
                     ),
                     'verify' => false,
@@ -206,10 +206,12 @@ class EWalletController extends Controller
                 try {
                     $call_response = $guzzle_client->request('POST', $url, [
                         // 'form_params' => [],
-                        // 'headers' => [],
-                        'form_params' => array(
-                            'user_id' => $user_id,
+                        'headers' => array(
+                            'content-type' => 'application/json',
                         ),
+                        'body' => json_encode(array(
+                            'user_id' => $user_id,
+                        )),
                         'verify' => false,
                     ]);
                     $body_response = json_decode($call_response->getBody()->getContents(), true);
@@ -493,7 +495,6 @@ class EWalletController extends Controller
                     $call_response = $guzzle_client->request('POST', $url, [
                         'form_params' => array(
                             'user_id' => $user_id,
-                            // 'nilai' => $nilai,
                         ),
                         'verify' => false,
                     ]);
@@ -566,13 +567,25 @@ class EWalletController extends Controller
                     }
                     catch (Exception $e){
                         return array(
-                            'message' => '[4]:dictionary key missing exception on retransfer',
+                            'message' => '[4]:connection and parsing exception on retransfer',
                             'exception' => $e->getMessage(),
                         );
                     }
                     
+                    try {
+                        $status_transfer = $transfer_body['status_transfer'];
+                    }
+                    catch(Exception $e){
+                        return array(
+                            'message' => '[5]:dictionary key missing exception on retransfer',
+                            'exception' => $e->getMessage(),
+                            'register_response' => $register_body,
+                            'transfer_response' => $transfer_body,
+                        );
+                    }
+                    
 
-                    if($transfer_body['status_transfer'] == -1){
+                    if($status_transfer == -1){
                         // fail on target server after register
                         return array(
                             'message' => '[5]:transfer fail after register',
@@ -580,7 +593,7 @@ class EWalletController extends Controller
                             'transfer_response' => $transfer_body,
                         );
                     }
-                    else if ($transfer_body['status_transfer'] == 0){
+                    else if ($status_transfer == 0){
                         // success on target server after register
                         $user->saldo -= $nilai;
                         $user->save();
