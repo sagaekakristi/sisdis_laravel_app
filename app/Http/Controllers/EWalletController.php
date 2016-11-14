@@ -166,10 +166,12 @@ class EWalletController extends Controller
             try {
                 $call_response = $guzzle_client->request('POST', $url, [
                     // 'form_params' => [],
-                    // 'headers' => [],
-                    'form_params' => array(
-                        'user_id' => $user_id,
+                    'headers' => array(
+                        'content-type' => 'application/json',
                     ),
+                    'body' => json_encode(array(
+                        'user_id' => $user_id,
+                    )),
                     'verify' => false,
                 ]);
                 $body_response = json_decode($call_response->getBody()->getContents(), true);
@@ -493,9 +495,12 @@ class EWalletController extends Controller
                 // catch: connection and parsing exception
                 try {
                     $call_response = $guzzle_client->request('POST', $url, [
-                        'form_params' => array(
-                            'user_id' => $user_id,
+                        'headers' => array(
+                            'content-type' => 'application/json',
                         ),
+                        'body' => json_encode(array(
+                            'user_id' => $user_id,
+                        )),
                         'verify' => false,
                     ]);
                     $body_response = json_decode(
@@ -529,11 +534,14 @@ class EWalletController extends Controller
                     // catch: connection and parsing exception on registering
                     try {
                         $register_response = $guzzle_client->request('POST', $register_url, [
-                            'form_params' => array(
+                            'headers' => array(
+                                'content-type' => 'application/json',
+                            ),
+                            'body' => json_encode(array(
                                 'user_id' => $user_id,
                                 'nama' => $user->nama,
                                 'ip_domisili' => $user->ip_domisili,
-                            ),
+                            )),
                             'verify' => false,
                         ]);
                         $register_body = json_decode(
@@ -554,10 +562,13 @@ class EWalletController extends Controller
                     // catch: connection and parsing exception on retransfer
                     try {
                         $transfer_response = $guzzle_client->request('POST', $register_url, [
-                            'form_params' => array(
+                            'headers' => array(
+                                'content-type' => 'application/json',
+                            ),
+                            'body' => json_encode(array(
                                 'user_id' => $user_id,
                                 'nilai' => $nilai,
-                            ),
+                            )),
                             'verify' => false,
                         ]);
                         $transfer_body = json_decode(
@@ -644,9 +655,12 @@ class EWalletController extends Controller
         // catch: connection and parsing exception
         try {
             $call_response = $guzzle_client->request('POST', $url, [
-                'form_params' => array(
-                    'user_id' => $user_id,
+                'headers' => array(
+                    'content-type' => 'application/json',
                 ),
+                'body' => json_encode(array(
+                    'user_id' => $user_id,
+                )),
                 'verify' => false,
             ]);
             $body_response = json_decode(
@@ -682,7 +696,6 @@ class EWalletController extends Controller
         // catch: connection and parsing exception
         try {
             $call_response = $guzzle_client->request('POST', $url, [
-                'form_params' => array(),
                 'verify' => false,
             ]);
             $body_response = json_decode(
@@ -722,11 +735,14 @@ class EWalletController extends Controller
         // catch: connection and parsing exception
         try {
             $call_response = $guzzle_client->request('POST', $url, [
-                'form_params' => array(
+                'headers' => array(
+                    'content-type' => 'application/json',
+                ),
+                'body' => json_encode(array(
                     'user_id' => $user_id,
                     'nama' => $nama,
                     'ip_domisili' => $ip_domisili,
-                ),
+                )),
                 'verify' => false,
             ]);
             $body_response = json_decode(
@@ -764,9 +780,12 @@ class EWalletController extends Controller
         // catch: connection and parsing exception
         try {
             $call_response = $guzzle_client->request('POST', $url, [
-                'form_params' => array(
-                    'user_id' => $user_id,
+                'headers' => array(
+                    'content-type' => 'application/json',
                 ),
+                'body' => json_encode(array(
+                    'user_id' => $user_id,
+                )),
                 'verify' => false,
             ]);
             $body_response = json_decode(
