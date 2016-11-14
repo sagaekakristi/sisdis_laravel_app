@@ -202,7 +202,14 @@ class EWalletController extends Controller
             // jalankan seperti biasa
             $guzzle_client = new GuzzleClient();
             foreach ($ips as $ip){
-                $url = 'https://' . $ip . 'ewallet/getSaldo';
+                $url = '';
+                if($ip == 'gylberth.sisdis.ui.ac.id/') {
+                    $url .= 'http://';
+                }
+                else {
+                    $url .= 'https://';
+                }
+                $url .= $ip . 'ewallet/getSaldo';
 
                 // catch: connection and parsing exception
                 try {
