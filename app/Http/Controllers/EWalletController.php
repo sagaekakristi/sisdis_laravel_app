@@ -589,6 +589,7 @@ class EWalletController extends Controller
                         return array(
                             'message' => '[4]:connection and parsing exception on retransfer',
                             'exception' => $e->getMessage(),
+                            'register_response' => $register_body,
                         );
                     }
                     
