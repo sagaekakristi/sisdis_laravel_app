@@ -570,7 +570,7 @@ class EWalletController extends Controller
 
                     // catch: connection and parsing exception on retransfer
                     try {
-                        $transfer_response = $guzzle_client->request('POST', $register_url, [
+                        $transfer_response = $guzzle_client->request('POST', $transfer_url, [
                             'headers' => array(
                                 'content-type' => 'application/json',
                             ),
@@ -628,16 +628,46 @@ class EWalletController extends Controller
                     // unknown status
                     return array(
                         'message' => 'unknown status',
-                        'response' => $body_response,
+                        'body_response' => $body_response,
                     );
                 }
                 else {
+                    // user found
+                    // do transfer
+                    $transfer_url = 'https://' . $ip_tujuan . '/ewallet/transfer';
+
+                    // catch: connection and parsing exception on retransfer
+                    try {
+                        $transfer_response = $guzzle_client->request('POST', $transfer_url, [
+                            'headers' => array(
+                                'content-type' => 'application/json',
+                            ),
+                            'body' => json_encode(array(
+                                'user_id' => $user_id,
+                                'nilai' => $nilai,
+                            )),
+                            'verify' => false,
+                        ]);
+                        $transfer_body = json_decode(
+                            $transfer_response->getBody()->getContents(), 
+                            true
+                        );
+                    }
+                    catch (Exception $e){
+                        return array(
+                            'message' => '[4]:connection and parsing exception on retransfer',
+                            'exception' => $e->getMessage(),
+                        );
+                    }
+
                     // success on target server without register
                     $user->saldo -= $nilai;
                     $user->save();
+
                     return array(
                         'message' => 'transfer success',
-                        'response' => $body_response,
+                        'body_response' => $body_response,
+                        'transfer_response' => $transfer_body,
                     );
                 }
             }
