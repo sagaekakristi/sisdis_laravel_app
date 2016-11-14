@@ -493,7 +493,9 @@ class EWalletController extends Controller
         else { // user exist
             if($user->saldo < $nilai){
                 // saldo kurang
-                return "saldo kurang";
+                return array(
+                    'message' => 'saldo kurang',
+                );
             }
             else { // saldo cukup untuk dikurangi
                 // panggil target: cek keberadaaan user_id via getSaldo
@@ -635,6 +637,7 @@ class EWalletController extends Controller
                     $user->save();
                     return array(
                         'message' => 'transfer success',
+                        'response' => $body_response,
                     );
                 }
             }
