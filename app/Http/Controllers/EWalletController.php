@@ -61,7 +61,7 @@ class EWalletController extends Controller
 
         // check if user already exist
         $user = EWallet::where('user_id', '=', $user_id)->first();
-        $default_saldo = 1000000;
+        $default_saldo = 0;
         $success = null;
 
         if($user != null){
