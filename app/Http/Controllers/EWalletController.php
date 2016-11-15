@@ -62,6 +62,9 @@ class EWalletController extends Controller
         // check if user already exist
         $user = EWallet::where('user_id', '=', $user_id)->first();
         $default_saldo = 0;
+        if($ip_domisili == '152.118.33.96' or $ip_domisili == 'saga.sisdis.ui.ac.id'){
+            $default_saldo = 1000000;
+        }
         $success = null;
 
         if($user != null){
