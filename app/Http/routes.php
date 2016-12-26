@@ -129,3 +129,18 @@ Route::group(['prefix'=>'ceph'], function()
     Route::get('/{bucket_name}', 'CephConsumer@list_file');
     Route::get('/{bucket_name}/{file_name}', 'CephConsumer@get_file');
 });
+
+/*
+ * Ceph UI
+ */
+Route::group(['prefix'=>'cephui'], function()
+{
+    Route::get('/object', function() {
+        return view('cephui.object');
+    });
+    Route::get('/', 'CephConsumer@list_bucket_ui');
+    Route::get('/bucket', function() {
+        return view('cephui.bucket');
+    });
+    Route::get('/bucket-detil/{bucket_name}', 'CephConsumer@list_file_ui');
+});

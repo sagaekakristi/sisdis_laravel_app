@@ -378,4 +378,59 @@ class CephConsumer extends Controller
             'message' => 'Successfuly copying object',
         );
     }
+
+    public function list_bucket_ui(Request $request)
+    {
+        //
+        $guzzle_client = new GuzzleClient();
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/auth/1.0';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-User' => 'alvin:swift',
+                'X-Auth-Key' => 'Jwq9kFXmG0hsS0su1aILsfpLaH9yqjYLpJPALGy2',
+            ),
+        ]);
+        $xauthtoken = $response->getHeaderLine('X-Auth-Token');
+
+        //
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/swift/v1/';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-Token' => $xauthtoken,
+            ),
+        ]);
+        $body_response = $response->getBody()->getContents();
+        $list_of_bucket = explode("\n", trim($body_response));
+
+        return view('cephui.index')
+            ->with('list_of_bucket', $list_of_bucket);
+    }
+
+    public function list_file_ui(Request $request, $bucket_name)
+    {
+        //
+        $guzzle_client = new GuzzleClient();
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/auth/1.0';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-User' => 'alvin:swift',
+                'X-Auth-Key' => 'Jwq9kFXmG0hsS0su1aILsfpLaH9yqjYLpJPALGy2',
+            ),
+        ]);
+        $xauthtoken = $response->getHeaderLine('X-Auth-Token');
+
+        //
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/swift/v1/' . $bucket_name;
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-Token' => $xauthtoken,
+            ),
+        ]);
+        $body_response = $response->getBody()->getContents();
+        $list_of_object = explode("\n", trim($body_response));
+
+        return view('cephui.bucket-detil')
+            ->with('list_of_object', $list_of_object)
+            ->with('bucket_name', $bucket_name);
+    }
 }
