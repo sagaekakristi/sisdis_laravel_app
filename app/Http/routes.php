@@ -107,8 +107,6 @@ Route::group(['prefix'=>'ewallet'], function()
  */
 Route::group(['prefix'=>'ceph'], function()
 {
-    Route::get('/', 'CephConsumer@list_bucket');
-
     Route::get('/create_bucket', 'CephConsumer@create_bucket_form');
     Route::post('/create_bucket_receiver', 'CephConsumer@create_bucket_receiver');
 
@@ -124,6 +122,7 @@ Route::group(['prefix'=>'ceph'], function()
     Route::get('/copy_object', 'CephConsumer@copy_object_form');
     Route::post('/copy_object_receiver', 'CephConsumer@copy_object_receiver');
 
+    Route::get('/', 'CephConsumer@list_bucket');
     Route::get('/{bucket_name}', 'CephConsumer@list_file');
     Route::get('/{bucket_name}/{file_name}', 'CephConsumer@get_file');
 });

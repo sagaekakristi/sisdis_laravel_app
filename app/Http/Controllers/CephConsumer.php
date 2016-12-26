@@ -38,11 +38,8 @@ class CephConsumer extends Controller
         $body_response = $response->getBody()->getContents();
         $list_of_bucket = explode("\n", trim($body_response));
 
-        foreach($list_of_bucket as $bucket_name){
-            $url = url('ceph/' . $bucket_name);
-            $link = '<a href="' . $url . '">' . $bucket_name . '</a>' . '<br>';
-            echo $link;
-        }
+        return view('ceph.list_bucket')
+            ->with('list_of_bucket', $list_of_bucket);
     }
 
     /**
@@ -71,11 +68,9 @@ class CephConsumer extends Controller
         $body_response = $response->getBody()->getContents();
         $list_of_object = explode("\n", trim($body_response));
 
-        foreach($list_of_object as $object_name){
-            $url = url('ceph/' . $bucket_name . '/' . $object_name);
-            $link = '<a href="' . $url . '">' . $object_name . '</a>' . '<br>';
-            echo $link;
-        }
+        return view('ceph.list_file')
+            ->with('list_of_object', $list_of_object)
+            ->with('bucket_name', $bucket_name);
     }
 
     /**
