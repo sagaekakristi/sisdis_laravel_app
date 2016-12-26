@@ -45,6 +45,40 @@ class CephConsumer extends Controller
     /**
      * 
      */
+    public function list_bucket_api(Request $request)
+    {
+        //
+        $guzzle_client = new GuzzleClient();
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/auth/1.0';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-User' => 'alvin:swift',
+                'X-Auth-Key' => 'Jwq9kFXmG0hsS0su1aILsfpLaH9yqjYLpJPALGy2',
+            ),
+        ]);
+        $xauthtoken = $response->getHeaderLine('X-Auth-Token');
+
+        //
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/swift/v1/';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-Token' => $xauthtoken,
+            ),
+        ]);
+        $body_response = $response->getBody()->getContents();
+        $list_of_bucket = explode("\n", trim($body_response));
+
+        return array(
+            'message' => 'return list of bucket',
+            'data' => array(
+                'buckets' => $list_of_bucket,
+            ),
+        );
+    }
+
+    /**
+     * 
+     */
     public function list_file(Request $request, $bucket_name)
     {
         //
@@ -71,6 +105,41 @@ class CephConsumer extends Controller
         return view('ceph.list_file')
             ->with('list_of_object', $list_of_object)
             ->with('bucket_name', $bucket_name);
+    }
+
+    /**
+     * 
+     */
+    public function list_file_api(Request $request, $bucket_name)
+    {
+        //
+        $guzzle_client = new GuzzleClient();
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/auth/1.0';
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-User' => 'alvin:swift',
+                'X-Auth-Key' => 'Jwq9kFXmG0hsS0su1aILsfpLaH9yqjYLpJPALGy2',
+            ),
+        ]);
+        $xauthtoken = $response->getHeaderLine('X-Auth-Token');
+
+        //
+        $url = 'grup1-01.sisdis.ui.ac.id:7480/swift/v1/' . $bucket_name;
+        $response = $guzzle_client->request('GET', $url, [
+            'headers' => array(
+                'X-Auth-Token' => $xauthtoken,
+            ),
+        ]);
+        $body_response = $response->getBody()->getContents();
+        $list_of_object = explode("\n", trim($body_response));
+
+        return array(
+            'message' => 'return list of object',
+            'data' => array(
+                'bucket_name' => $bucket_name,
+                'objects' => $list_of_object,
+            ),
+        );
     }
 
     /**

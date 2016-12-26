@@ -122,6 +122,9 @@ Route::group(['prefix'=>'ceph'], function()
     Route::get('/copy_object', 'CephConsumer@copy_object_form');
     Route::post('/copy_object_receiver', 'CephConsumer@copy_object_receiver');
 
+    Route::get('/list_bucket_receiver', 'CephConsumer@list_bucket_api');
+    Route::get('/{bucket_name}/list_bucket_receiver', 'CephConsumer@list_file_api');
+
     Route::get('/', 'CephConsumer@list_bucket');
     Route::get('/{bucket_name}', 'CephConsumer@list_file');
     Route::get('/{bucket_name}/{file_name}', 'CephConsumer@get_file');
