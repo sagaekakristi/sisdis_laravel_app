@@ -150,6 +150,11 @@ return [
         Artisaninweb\SoapWrapper\ServiceProvider::class,
         // 'Artisaninweb\SoapWrapper\ServiceProvider',
 
+        /*
+         * Ceph
+         */
+        Aws\Laravel\AwsServiceProvider::class,
+
     ],
 
     /*
@@ -204,6 +209,10 @@ return [
         'SoapWrapper' => Artisaninweb\SoapWrapper\Facades\SoapWrapper::class,
         // 'SoapWrapper' => 'Artisaninweb\SoapWrapper\Facades\SoapWrapper',
 
+        /*
+         * Ceph
+         */
+        'AWS' => Aws\Laravel\AwsFacade::class,
     ],
 
 ];

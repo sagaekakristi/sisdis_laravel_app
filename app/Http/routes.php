@@ -101,3 +101,13 @@ Route::group(['prefix'=>'ewallet'], function()
     Route::post('/healthCheck', 'EWalletController@health_check');
     Route::post('/quorum', 'EWalletController@quorum');
 });
+
+/*
+ * Tugas 5 group
+ */
+Route::group(['prefix'=>'ceph'], function()
+{
+    Route::get('/', 'CephConsumer@list_bucket');
+    Route::get('/{bucket_name}', 'CephConsumer@list_file');
+    Route::get('/{bucket_name}/{file_name}', 'CephConsumer@get_file');
+});
