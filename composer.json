@@ -10,6 +10,7 @@
         "laravelcollective/html": "5.1.*",
         "artisaninweb/laravel-soap": "0.2.*",
         "guzzlehttp/guzzle": "~6.0",
+        "symfony/psr-http-message-bridge": "0.2",
         "aws/aws-sdk-php-laravel": "~3.0"
     },
     "require-dev": {

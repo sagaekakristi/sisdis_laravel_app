@@ -165,9 +165,8 @@ class CephConsumer extends Controller
                 'X-Auth-Token' => $xauthtoken,
             ),
         ]);
-        $body_response = $response->getBody()->getContents();
 
-        return $body_response;
+        return $response;
     }
 
     /**
@@ -265,7 +264,9 @@ class CephConsumer extends Controller
     {
         $bucket_name = $request->input('bucket_name');
         $object_name = $request->input('object_name');
-        $object_content = $request->input('object_content');
+        //$object_content = $request->input('object_content');
+        $file = $request->file('object_content');
+        $file_content = file_get_contents($file);
 
         //
         $guzzle_client = new GuzzleClient();
@@ -284,7 +285,7 @@ class CephConsumer extends Controller
             'headers' => array(
                 'X-Auth-Token' => $xauthtoken,
             ),
-            'body' => $object_content,
+            'body' => $file_content,
         ]);
         $body_response = $response->getBody()->getContents();
 

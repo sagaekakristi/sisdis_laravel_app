@@ -56,19 +56,33 @@
          <div class="row">
             <div class="col-lg-12">
                <h3 class="page-header">Create New Object</h3>
-               <form method="POST" action="/ceph/create_object_receiver" accept-charset="UTF-8">
+
+               <?php
+               echo Form::open(array('action'=>'CephConsumer@create_object_receiver', 'files'=>true, 'method' => 'post'));
+               echo '<div>';
+               echo Form::text('bucket_name', null, array('class' => 'form-control', 'placeholder' => 'Bucket Name'));
+               echo '<br>';
+               echo Form::text('object_name', null, array('class' => 'form-control', 'placeholder' => 'Object Name'));
+               echo '<br>';
+               echo Form::file('object_content', '', array('id'=>'','class'=>''));
+               echo '</div>';
+               echo '<br>';
+               echo Form::submit('Unggah', array('class'=>'btn btn-primary'));
+               echo Form::close();
+               ?>
+               <!-- <form method="POST" action="/ceph/create_object_receiver" accept-charset="UTF-8">
                   <input name="_token" type="hidden" value="JZqK6etOd6LxTjfgBrxaZmGI02bE3aSkTEHrzQ9i">
                   <div>
                      <label for="bucket_name"></label>
                      <input class="form-control" name="bucket_name" type="text" id="bucket_name" placeholder="Bucket Name">
                      <label for="object_name"></label>
                      <input class="form-control" name="object_name" type="text" id="object_name" placeholder="Object Name">
-                     <label for="object_content"></label> 
-                     <input class="form-control" name="object_content" type="text-area" id="object_content" placeholder="Content">
+                     <label for="object_content"></label>
+                     <input class="form-control" name="object_content" type="file" id="object_content" placeholder="Content">
                   </div>
                   <br>
                   <input class="btn btn-primary" type="submit" value="Create">
-               </form>
+               </form> -->
             </div>
          </div>
          <!-- Delete -->
